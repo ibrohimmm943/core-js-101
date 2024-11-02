@@ -88,9 +88,23 @@ console.log(isLeapYear(new Date(2015, 1, 1)));
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const diff = endDate - startDate;
+
+  const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+  const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+  const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+  const milliseconds = String(diff % 1000).padStart(3, '0');
+
+  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
+
+console.log(timeSpanToString(new Date(2000, 1, 1, 10, 0, 0), new Date(2000, 1, 1, 11, 0, 0))); 
+console.log(timeSpanToString(new Date(2000, 1, 1, 10, 0, 0), new Date(2000, 1, 1, 10, 30, 0))); 
+console.log(timeSpanToString(new Date(2000, 1, 1, 10, 0, 0), new Date(2000, 1, 1, 10, 0, 20))); 
+console.log(timeSpanToString(new Date(2000, 1, 1, 10, 0, 0), new Date(2000, 1, 1, 10, 0, 0, 250))); 
+console.log(timeSpanToString(new Date(2000, 1, 1, 10, 0, 0), new Date(2000, 1, 1, 15, 20, 10, 453))); 
+
 
 
 /**
@@ -109,9 +123,26 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const hours = new Date(date).getUTCHours() % 12;
+  const minutes = new Date(date).getUTCMinutes();
+
+  const hourAngle = (hours * 30) + (minutes * 0.5);  
+  const minuteAngle = minutes * 6; 
+
+  let angle = Math.abs(hourAngle - minuteAngle);
+
+  if (angle > 180) angle = 360 - angle;
+
+  return (angle * Math.PI) / 180;
 }
+
+
+console.log(angleBetweenClockHands(Date.UTC(2016, 2, 5, 0, 0))); 
+console.log(angleBetweenClockHands(Date.UTC(2016, 3, 5, 3, 0))); 
+console.log(angleBetweenClockHands(Date.UTC(2016, 3, 5, 18, 0))); 
+console.log(angleBetweenClockHands(Date.UTC(2016, 3, 5, 21, 0)));
+
 
 
 module.exports = {
